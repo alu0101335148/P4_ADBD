@@ -170,6 +170,8 @@ VALUES (1, 'Almacén',   1, 2),
        (2, 'Almacén',   2, 7),
        (2, 'Oficina',   2, 4),
 
+
+
 INSERT INTO CLIENTE
 VALUES (1, 'Juan', '2021-01-01', 0, 'BASICO'),
        (2, 'Pedro', '2021-01-01', 0, 'BASICO'),
@@ -177,11 +179,11 @@ VALUES (1, 'Juan', '2021-01-01', 0, 'BASICO'),
        (4, 'Maria', '2021-01-01', 0, 'PLUS'),
        (5, 'Airam', '2021-01-01', 0, 'PLUS');
 
+
+
 INSERT INTO PEDIDO
 VALUES (1, 1, 1, 1, '2021-01-01', 0),
        (2, 2, 2, 2, '2021-01-01', 0),
        (3, 3, 3, 3, '2021-01-01', 0),
        (4, 4, 4, 4, '2021-01-01', 0),
        (5, 5, 5, 5, '2021-01-01', 0);
-
-/* OJO si se pone null al final del tipo aunque sea una clave ajena puede ser null en caso de que la clave ajeno no exista se pone a null */
