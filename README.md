@@ -32,7 +32,6 @@ Cliente(**id_cliente**, Fecha de alta, `Numero de pedidos`, Plan)
 
 Pedido(**id_venta**, **_id_producto_**, id_cliente, responsable(_id_empleado_), fecha, cantidad)
 
-
 ## 3. Salida del script
 
 ![output](img/output.png)
