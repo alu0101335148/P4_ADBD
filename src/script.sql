@@ -5,10 +5,6 @@
  * Email: alu0101335148@ull.edu.es
  * Fecha: 2022-10-27
  * Descripción: Creación de la base de datos para viveros
- * Uso:
- * $ sudo su postgres
- * $ psql 
- * $ \i adbd.sql
  */
 
 ---------------------------------Pasos previos---------------------------------
