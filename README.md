@@ -13,7 +13,7 @@ Airam Rafael Luque León (alu0101335148@ull.edu.es)
 ```bash
 $ sudo su postgres
 $ psql 
-$ \i adbd.sql
+$ \i script.sql
 ```
 
 ## 2. Modelo relacional
@@ -32,6 +32,14 @@ Cliente(**id_cliente**, Fecha de alta, `Numero de pedidos`, Plan)
 
 Pedido(**id_venta**, **_id_producto_**, id_cliente, responsable(_id_empleado_), fecha, cantidad)
 
+### Leyenda
+
+-   **Atributo** (clave primaria)
+-   **_Atributo_** (clave foránea)
+-   `Atributo` (atributo calculado)
+
 ## 3. Salida del script
 
-![output](img/output.png)
+![script-output](img/query1.png)
+
+![script-output](img/query2.png)

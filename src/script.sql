@@ -9,15 +9,15 @@
 
 ---------------------------------Pasos previos---------------------------------
 
-DROP SCHEMA public CASCADE
-CREATE SCHEMA public;
+DROP SCHEMA PUBLIC CASCADE;
+CREATE SCHEMA PUBLIC;
 
-DROP TABLE IF EXIST VIVERO;
-DROP TABLE IF EXIST ZONA;
-DROP TABLE IF EXIST EMPLEADO;
-DROP TABLE IF EXIST TRABAJA;
-DROP TABLE IF EXIST PEDIDO;
-DROP TABLE IF EXIST CLIENTE;
+-- DROP TABLE IF EXISTS VIVERO;
+-- DROP TABLE IF EXISTS ZONA;
+-- DROP TABLE IF EXISTS EMPLEADO;
+-- DROP TABLE IF EXISTS TRABAJA;
+-- DROP TABLE IF EXISTS PEDIDO;
+-- DROP TABLE IF EXISTS CLIENTE;
 
 ------------------------------Creación de tablas-------------------------------
 
@@ -29,8 +29,9 @@ CREATE TABLE VIVERO (
 
 
 CREATE TABLE ZONA (
-  ID_ZONA VARCHAR(50) PRIMARY KEY,
-  ID_VIVERO INT PRIMARY KEY,
+  ID_ZONA INT PRIMARY KEY,
+  ID_VIVERO INT,
+  NAME VARCHAR(50) NOT NULL,
   CONSTRAINT FK_VIVERO_ZONA 
     FOREIGN KEY (ID_VIVERO) 
       REFERENCES VIVERO(ID_VIVERO) 
@@ -41,7 +42,7 @@ CREATE TABLE ZONA (
 
 CREATE TABLE EMPLEADO (
   ID_EMPLEADO INT PRIMARY KEY,
-  NAME VARCHAR(50) NOT NULL,
+  NAME VARCHAR(50) NOT NULL
 );
 
 
@@ -50,7 +51,7 @@ CREATE TABLE TRABAJA (
   ID_EMPLEADO INT PRIMARY KEY,
   EPOCA_INICIO DATE NOT NULL,
   EPOCA_FINAL DATE,
-  ID_ZONA VARCHAR(50),
+  ID_ZONA INT,
   PRODUCTIVIDAD INT DEFAULT 0,
   CONSTRAINT FK_EMPLEADO_TRABAJA
     FOREIGN KEY (ID_EMPLEADO)
@@ -67,20 +68,30 @@ CREATE TABLE TRABAJA (
 );
 
 
-
 CREATE TABLE PRODUCTO (
-  ID_VIVERO INT PRIMARY KEY,
-  ID_ZONA VARCHAR(50) PRIMARY KEY,
   ID_PRODUCTO INT PRIMARY KEY,
+  NAME VARCHAR(50) NOT NULL
+);
+
+
+CREATE TABLE PRODUCTO_EN (
+  ID_VIVERO INT,
+  ID_ZONA INT,
+  ID_PRODUCTO INT,
   STOCK INT,
-  CONSTRAINT FK_VIVERO_PRODUCTO
+  PRIMARY KEY (ID_VIVERO, ID_ZONA, ID_PRODUCTO),
+  CONSTRAINT FK_VIVERO_PRODUCTO_EN
     FOREIGN KEY (ID_VIVERO) 
       REFERENCES VIVERO(ID_VIVERO)
         ON DELETE CASCADE,
-  CONSTRAINT FK_ZONA_PRODUCTO
+  CONSTRAINT FK_ZONA_PRODUCTO_EN
     FOREIGN KEY (ID_ZONA)
       REFERENCES ZONA(ID_ZONA)
-        ON DELETE CASCADE
+        ON DELETE CASCADE,
+  CONSTRAINT FK_PRODUCTO_PRODUCTO_EN
+    FOREIGN KEY (ID_PRODUCTO)
+      REFERENCES PRODUCTO(ID_PRODUCTO)
+        ON DELETE CASCADE,
   CONSTRAINT CHECK_STOCK
     CHECK (STOCK >= 0)
 );
@@ -94,7 +105,7 @@ CREATE TABLE CLIENTE (
   NUMERO_PEDIDOS INT DEFAULT 0,
   PLAN VARCHAR(50) NOT NULL,
   CONSTRAINT CHECK_NUMERO_PEDIDOS
-    CHECK (NUMERO_PEDIDOS >= 0)
+    CHECK (NUMERO_PEDIDOS >= 0),
   CONSTRAINT CHECK_PLAN
     CHECK (PLAN IN ('BASICO', 'PLUS'))
 );
@@ -102,12 +113,13 @@ CREATE TABLE CLIENTE (
 
 
 CREATE TABLE PEDIDO (
-  ID_VENTA INT PRIMARY KEY,
-  ID_PRODUCTO INT PRIMARY KEY,
+  ID_VENTA INT,
+  ID_PRODUCTO INT,
   ID_CLIENTE INT,
   RESPONSABLE INT,
   FECHA DATE,
   CANTIDAD INT,
+  PRIMARY KEY (ID_VENTA, ID_PRODUCTO),
   CONSTRAINT FK_PRODUCTO_PEDIDO 
     FOREIGN KEY (ID_PRODUCTO)
       REFERENCES PRODUCTO(ID_PRODUCTO) 
@@ -121,7 +133,7 @@ CREATE TABLE PEDIDO (
       REFERENCES EMPLEADO(ID_EMPLEADO) 
         ON DELETE SET NULL,
   CONSTRAINT CHECK_CANTIDAD
-    CHECK (CANTIDAD >= 0)
+    CHECK (CANTIDAD >= 1)
 );
 
 -----------------------------Inserción de valores------------------------------
@@ -137,38 +149,47 @@ VALUES (1, 'Vivero de Tenerife'),
 
 
 INSERT INTO ZONA
-VALUES ('Almacén', 1),
-       ('Recepción', 1),
-       ('Almacén', 2),
-       ('Recepción', 2),
-       ('Oficina', 2);
+VALUES (1, 1, 'Almacén'),
+       (2, 1, 'Recepción'),
+       (3, 2, 'Almacén'),
+       (4, 2, 'Recepción'),
+       (5, 2, 'Oficina');
 
 
 
 INSERT INTO EMPLEADO 
-VALUES (1, 'Airam');
-       (2, 'Juan');
-       (3, 'Pedro');
-       (4, 'Luis');
+VALUES (1, 'Airam'),
+       (2, 'Juan'),
+       (3, 'Pedro'),
+       (4, 'Luis'),
        (5, 'Maria');
 
 
 
 INSERT INTO TRABAJA
-VALUES (1, '2021-01-01', '2021-12-31', 'Almacén', 0),
-       (2, '2021-01-01', '2021-12-31', 'Recepción', 0),
-       (3, '2021-01-01', '2021-12-31', 'Almacén', 0),
-       (4, '2021-01-01', '2021-12-31', 'Recepción', 0),
-       (5, '2021-01-01', NULL, 'Oficina', 0);
+VALUES (1, '2021-01-01', '2021-12-31', 1, 0),
+       (2, '2021-01-01', '2021-12-31', 1, 0),
+       (3, '2021-01-01', '2021-12-31', 2, 0),
+       (4, '2021-01-01', '2021-12-31', 3, 0),
+       (5, '2021-01-01', NULL, 3, 0);
 
 
 
 INSERT INTO PRODUCTO
-VALUES (1, 'Almacén',   1, 2),
-       (1, 'Almacén',   2, 5),
-       (1, 'Recepción', 1, 10),
-       (2, 'Almacén',   2, 7),
-       (2, 'Oficina',   2, 4),
+VALUES (1, 'Rosa'),
+       (2, 'Orquídea'),
+       (3, 'Lirio'),
+       (4, 'Clavel'),
+       (5, 'Tulipán');
+
+
+
+INSERT INTO PRODUCTO_EN
+VALUES (1, 1,  1, 2),
+       (1, 1, 2, 5),
+       (1, 2, 1, 10),
+       (2, 2, 2, 7),
+       (2, 3, 2, 4);
 
 
 
@@ -182,8 +203,8 @@ VALUES (1, 'Juan', '2021-01-01', 0, 'BASICO'),
 
 
 INSERT INTO PEDIDO
-VALUES (1, 1, 1, 1, '2021-01-01', 0),
-       (2, 2, 2, 2, '2021-01-01', 0),
-       (3, 3, 3, 3, '2021-01-01', 0),
-       (4, 4, 4, 4, '2021-01-01', 0),
-       (5, 5, 5, 5, '2021-01-01', 0);
+VALUES (1, 1, 1, 1, '2021-01-01', 1),
+       (2, 2, 2, 2, '2021-01-01', 2),
+       (3, 3, 3, 3, '2021-01-01', 3),
+       (4, 4, 4, 4, '2021-01-01', 4),
+       (5, 5, 5, 5, '2021-01-01', 5);
