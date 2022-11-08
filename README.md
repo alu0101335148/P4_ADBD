@@ -18,25 +18,7 @@ $ \i script.sql
 
 ## 2. Modelo relacional
 
-Vivero(**id_vivero**, nombre)
-
-Zona(**_id_vivero_**, **id_zona**)
-
-Empleado(**id_empleado**, nombre)
-
-Trabaja(**_id_empleado_**, época(inicio, final), _id_zona_, `productividad`)
-
-Producto(**_id_vivero_**, **_id_zona_**, **id_producto**, stock)
-
-Cliente(**id_cliente**, Fecha de alta, `Numero de pedidos`, Plan)
-
-Pedido(**id_venta**, **_id_producto_**, id_cliente, responsable(_id_empleado_), fecha, cantidad)
-
-### Leyenda
-
--   **Atributo** (clave primaria)
--   **_Atributo_** (clave foránea)
--   `Atributo` (atributo calculado)
+![relational-model](img/relational-model.png)
 
 ## 3. Salida del script
 
